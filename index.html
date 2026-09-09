@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>전자 마권 사용성 평가</title>
+<style>
+  :root{
+    --dk:#202E3C;        /* 헤더 */
+    --sub:#5B87D8;       /* 서브바 */
+    --pick:#2E5EAA;      /* 선택 파랑 */
+    --cart:#2A56A8;      /* 카트담기 */
+    --buy:#0FA588;       /* 바로구매 */
+    --red:#E8402F;
+    --home:#3E6FD1;      /* 홈 파란 영역 */
+    --menu:#3D5FC4;      /* 메뉴 바 */
+    --cream:#F2F5DC;     /* 금액 글자 */
+    --line:#C9D0D8;
+    --line2:#E3E8ED;
+    --txt:#222B33;
+    --mut:#9AA3AD;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+       background:#DFE4E9;color:var(--txt);font-size:15px;line-height:1.4;}
+  #app{max-width:430px;margin:0 auto;background:#fff;min-height:100vh;min-height:100dvh;
+       position:relative;overflow:hidden;box-shadow:0 0 20px rgba(0,0,0,.1);}
+  .screen{display:none;min-height:100vh;min-height:100dvh;flex-direction:column;}
+  .screen.on{display:flex;}
+
+  /* ===== 헤더 ===== */
+  .hd{background:var(--dk);color:#fff;display:flex;align-items:center;
+      padding:15px 16px;flex:0 0 auto;}
+  .hd .l{display:flex;gap:14px;width:80px;align-items:center;}
+  .hd .l svg,.hd .r svg{height:22px;width:22px;}
+  .hd .c{flex:1;text-align:center;font-size:17px;font-weight:700;letter-spacing:.5px;}
+  .hd .r{display:flex;gap:14px;width:80px;justify-content:flex-end;align-items:center;}
+  .hd .lg{flex:1;text-align:center;}
+  .hd .lg svg{height:26px;}
+
+  /* ===== 홈 ===== */
+  .home{background:var(--home);color:#fff;padding:16px 14px 14px;}
+  .home .r1{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+  .home .nim{font-size:15px;margin-left:20px;}
+  .home .rf{border:1.5px solid rgba(255,255,255,.85);border-radius:5px;
+            font-size:14px;padding:7px 14px;}
+  .home .bz{margin-left:auto;background:#fff;border-radius:12px;width:64px;height:56px;
+            display:flex;flex-direction:column;align-items:center;justify-content:center;
+            line-height:1;}
+  .home .bz b{font-size:20px;font-weight:900;color:#9B3A2E;font-family:Georgia,serif;}
+  .home .bz i{font-size:8px;font-style:normal;color:#B08A82;margin-top:3px;}
+  .home .lb{font-size:13px;margin-bottom:5px;}
+  .home .r2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .home .no,.home .bio{background:#fff;border:1.5px solid #8FD4D8;border-radius:5px;
+        text-align:center;color:var(--red);font-weight:800;padding:9px 0;}
+  .home .no{font-size:19px;letter-spacing:.5px;}
+  .home .bio{font-size:16px;}
+  .home .r3{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+  .home .r3 div{background:rgba(255,255,255,.28);border-radius:4px;text-align:center;
+                font-size:15px;padding:10px 0;cursor:pointer;}
+  .home .r4{display:grid;grid-template-columns:1fr 1fr;margin-top:14px;font-size:14px;
+            color:var(--cream);}
+  .home .r4 .c{display:flex;justify-content:space-between;align-items:center;padding:7px 0;}
+  .home .r4 .c:nth-child(odd){padding-right:14px;}
+  .home .r4 .c:nth-child(even){padding-left:14px;border-left:1px solid rgba(255,255,255,.35);}
+  .home .r4 .lft{display:flex;align-items:center;gap:7px;font-weight:700;}
+  .home .tag{border:1px solid rgba(255,255,255,.8);border-radius:4px;font-size:11px;
+             padding:2px 7px;font-weight:400;}
+  .home .arw{border:1px solid rgba(255,255,255,.8);border-radius:50%;width:19px;height:19px;
+             display:inline-flex;align-items:center;justify-content:center;font-size:11px;}
+
+  .white{background:#fff;padding:12px 14px 14px;}
+  .livebar{background:linear-gradient(90deg,#E8483C,#E23B32);color:#fff;text-align:center;
+           font-size:15px;font-weight:700;padding:8px;border-radius:2px;
+           border:2px solid;border-image:linear-gradient(90deg,#3BB54A,#F5D442,#E23B32) 1;}
+  .livebar .b{background:#fff;color:var(--red);border-radius:10px;font-size:11px;
+              padding:2px 8px;margin:0 5px;font-weight:900;letter-spacing:-.5px;}
+  .tk{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px;}
+  .tk .card{cursor:pointer;}
+  .tk .top{border:1.5px solid;border-bottom:0;border-radius:6px 6px 0 0;text-align:center;
+           padding:12px 0 10px;position:relative;background:#fff;}
+  .tk .nm{font-size:20px;font-weight:800;}
+  .tk .ul{width:62%;height:1.5px;margin:5px auto 0;}
+  .tk .od{font-size:38px;font-weight:800;color:#F5615C;line-height:1.2;}
+  .tk .bn{font-size:15px;color:#333;}
+  .tk .notch{position:relative;height:0;}
+  .tk .notch i{position:absolute;top:-9px;width:18px;height:18px;border-radius:50%;
+               background:#fff;border:1.5px solid;}
+  .tk .notch i.l{left:-9px;} .tk .notch i.r{right:-9px;}
+  .tk .gb{color:#fff;font-size:16px;font-weight:700;padding:11px;text-align:center;
+          border-radius:0 0 6px 6px;text-decoration:underline;}
+
+  .mrow{background:var(--menu);display:grid;grid-template-columns:repeat(4,1fr);}
+  .mrow .mi{color:#fff;text-align:center;padding:16px 2px 14px;font-size:14px;
+            font-weight:700;cursor:pointer;position:relative;}
+  .mrow .mi+.mi::before{content:"";position:absolute;left:0;top:20%;height:60%;
+                        width:1px;background:rgba(255,255,255,.3);}
+  .mrow .ic{display:block;height:30px;margin-bottom:7px;}
+  .mrow .ic svg{height:30px;width:auto;}
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:14px 14px 0;}
+  .tiles div{padding:16px 6px;text-align:center;border-radius:2px;}
+  .tiles svg{height:56px;width:auto;}
+
+  /* ===== 공통 본문 ===== */
+  .body{flex:1 1 auto;padding:14px 15px 16px;overflow-y:auto;}
+  .sect:first-child{margin-top:0;}
+  .grid{display:grid;gap:8px;}
+  .g3{grid-template-columns:repeat(3,1fr);}
+  .g4{grid-template-columns:repeat(4,1fr);}
+  .g7{grid-template-columns:repeat(7,1fr);}
+  .g8{grid-template-columns:repeat(8,1fr);}
+  .cell{border:1px solid #E7EBEF;border-radius:3px;background:#fff;
+        padding:11px 2px;text-align:center;font-size:14px;font-weight:700;
+        cursor:pointer;user-select:none;color:var(--txt);
+        box-shadow:0 1px 3px rgba(60,70,80,.10);}
+  .cell .sub{display:block;font-size:12.5px;font-weight:600;margin-top:5px;}
+  .cell.on{background:var(--pick) !important;border-color:var(--pick);color:#fff !important;
+           box-shadow:none;}
+  .cell.dim{color:#CDD3D9;box-shadow:none;cursor:default;}
+  .cell.blank{cursor:default;}
+  .cell.tall{padding:20px 2px;}
+  .cell.mid{padding:15px 2px;display:flex;align-items:center;justify-content:center;gap:7px;}
+  .cell.mid svg{height:22px;width:22px;flex:0 0 auto;}
+  .cell.mid.on svg path,.cell.mid.on svg circle{stroke:#fff;fill:none;}
+  .cell.small{padding:12px 1px;font-size:13.5px;}
+  .sect{font-size:16px;font-weight:800;margin:18px 0 9px;}
+
+  .btm{flex:0 0 auto;padding:0 15px 18px;background:#fff;}
+  .bigbtn{display:block;width:100%;border:0;border-radius:4px;background:var(--cart);
+          color:#fff;font-size:16px;font-weight:700;padding:16px;cursor:pointer;
+          font-family:inherit;}
+  .row3{display:grid;grid-template-columns:1fr 1.1fr 1.1fr;gap:8px;}
+  .row3 button{border-radius:2px;font-size:16px;font-weight:800;padding:15px 3px;
+               border:0;cursor:pointer;font-family:inherit;}
+  .b-out{background:#fff;border:1.5px solid #4A5560 !important;color:var(--txt);}
+  .b-cart{background:var(--cart);color:#fff;}
+  .b-buy{background:var(--buy);color:#fff;}
+
+  /* ===== 구매표 ===== */
+  .subbar{background:var(--sub);color:#fff;display:grid;grid-template-columns:1fr 1fr;
+          font-size:13.5px;text-align:center;font-weight:700;}
+  .subbar div{padding:10px 4px;}
+  .subbar div+div{border-left:1px solid rgba(255,255,255,.5);}
+  .subbar .hl{color:#8CEBFF;}
+  .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:13px 15px 0;}
+  .tab{border:1.5px solid #4A5560;border-radius:2px;text-align:center;
+       font-size:13.5px;font-weight:800;padding:9px 2px;cursor:pointer;background:#fff;}
+  .rtitle{padding:11px 15px 13px;font-size:15.5px;font-weight:700;
+          background:#F5F6F8;border-bottom:1px solid var(--line2);}
+  .picks{display:grid;grid-template-columns:44px 44px 44px 1fr 1fr 1fr;gap:4px;
+         padding:15px 15px 0;align-items:stretch;}
+  .picks .gapc{grid-column:4/7;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .pk{border:1px solid #E7EBEF;border-radius:2px;text-align:center;
+      font-size:15px;font-weight:800;padding:11px 0;color:#CBD1D8;background:#fff;}
+  .pk.on{background:var(--pick);border-color:var(--pick);color:#fff;}
+  .pkb{border:1.5px solid #4A5560;border-radius:2px;text-align:center;
+       font-size:13px;font-weight:800;padding:11px 1px;cursor:pointer;background:#fff;}
+  .cell.sik{border:1.5px solid #4A5560;border-radius:2px;padding:13px 1px;
+            font-size:15px;font-weight:800;box-shadow:none;}
+  .cell.sik.on{border-color:var(--pick);}
+  .cell.small{border:1px solid #E7EBEF;border-radius:2px;box-shadow:none;
+              padding:12px 1px;font-size:15px;font-weight:800;}
+  .sumwrap{padding:16px 15px 0;}
+  .sumbox{background:#DCE6F8;border-radius:14px;display:grid;
+          grid-template-columns:repeat(3,1fr);text-align:center;padding:14px 4px;}
+  .sumbox>div+div{border-left:1px solid #B9CCEC;}
+  .sumbox .k{font-size:12px;color:#5A6672;font-weight:600;}
+  .sumbox .v{font-size:19px;font-weight:800;margin-top:5px;}
+  .sumbox .v.red{color:#F03A2E;}
+
+  /* ===== 팝업 ===== */
+  .dim-bg{position:fixed;inset:0;background:rgba(30,40,50,.55);display:none;
+          align-items:center;justify-content:center;padding:22px;z-index:60;}
+  .dim-bg.on{display:flex;}
+  .pop{background:#fff;border-radius:10px;width:100%;max-width:330px;
+       padding:20px 18px 0;overflow:hidden;}
+  .pop .ph{text-align:center;font-size:17px;font-weight:800;margin-bottom:16px;}
+  .pop .box{background:#F1F3F6;border-radius:8px;padding:14px;text-align:center;}
+  .pop .box .r{color:#2A5EA8;font-size:15.5px;font-weight:800;}
+  .pop .box .d{font-size:14px;margin-top:6px;}
+  .pop .box hr{border:0;border-top:1px solid #DDE1E6;margin:11px 0;}
+  .pop .box .s{font-size:14.5px;font-weight:800;}
+  .pop .box .s b{color:var(--red);}
+  .pop .w1{text-align:center;font-size:14px;font-weight:800;margin:16px 0 10px;line-height:1.45;}
+  .pop .w2{text-align:center;font-size:13.5px;font-weight:700;margin-bottom:16px;}
+  .pop .pf{display:grid;grid-template-columns:1fr 1fr;gap:10px;
+           margin:0 -18px;padding:0 18px 18px;}
+  .pop .pf button{border:0;border-radius:4px;padding:14px;font-size:15px;
+                  font-weight:700;cursor:pointer;font-family:inherit;}
+  .pf .no{background:#B6BEC6;color:#fff;}
+  .pf .yes{background:#1E3550;color:#fff;}
+
+  /* ===== 완료 ===== */
+  .rs{padding:16px 16px 0;}
+  .rs .h0{font-size:15px;font-weight:700;color:#2B3742;padding-bottom:9px;
+          border-bottom:1.8px solid #6B7784;}
+  .rs .h1{font-size:22px;font-weight:800;padding:15px 0 16px;letter-spacing:-.5px;
+          border-bottom:1px solid #EDF0F3;}
+  .rs .ln{display:flex;justify-content:space-between;align-items:center;
+          padding:16px 2px;border-bottom:1px solid #EDF0F3;font-size:16px;}
+  .rs .ln .lft{display:flex;font-weight:800;}
+  .rs .ln .lft span:nth-child(1){width:76px;}
+  .rs .ln .lft span:nth-child(2){width:86px;font-weight:600;}
+  .rs .ln .rgt{font-weight:800;}
+  .rs .ln .rgt .gye{color:#2B3742;font-weight:700;margin-right:7px;}
+  .rs .ln b{color:#E03A2E;font-weight:800;}
+  .rs .ln .tm{font-size:15px;color:#2B3742;font-weight:700;}
+  .rbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding:18px 16px 0;}
+  .rbtns div{border-radius:2px;text-align:center;font-size:13.5px;font-weight:800;
+             padding:15px 2px;color:#fff;cursor:pointer;}
+
+  /* ===== 문서 ===== */
+  .doc{padding:26px 22px 30px;}
+  .doc h1{font-size:21px;color:#16375C;margin:0 0 6px;}
+  .doc .lead{font-size:13.5px;color:#46525E;margin-bottom:20px;line-height:1.7;}
+  .doc h2{font-size:14px;color:#16375C;margin:19px 0 5px;}
+  .doc p{margin:0;font-size:13.5px;line-height:1.68;}
+  .term{border-left:3px solid #C9D8E8;padding:2px 0 2px 14px;margin-bottom:18px;}
+  .term .tg{display:inline-block;background:#16375C;color:#fff;font-size:11px;
+            font-weight:700;padding:3px 11px;border-radius:11px;margin-bottom:7px;}
+  .taskbox{background:#E8F3F0;border-left:4px solid var(--buy);padding:15px 16px;
+           border-radius:3px;margin:24px 0 4px;}
+  .taskbox .lb{font-size:11px;font-weight:700;color:var(--buy);margin-bottom:6px;}
+  .taskbox .tx{font-size:15px;font-weight:700;color:#16375C;line-height:1.55;}
+  .note{font-size:12px;color:#8A94A2;margin-top:16px;line-height:1.6;}
+  .qbox{margin-bottom:22px;}
+  .qbox .q{font-size:14.5px;font-weight:700;color:#16375C;margin-bottom:10px;}
+  .opt{display:flex;align-items:center;gap:10px;border:1px solid var(--line2);
+       border-radius:5px;padding:12px 13px;margin-bottom:7px;font-size:13.5px;cursor:pointer;}
+  .opt .bx{width:17px;height:17px;border:1.5px solid #A9B3BF;border-radius:3px;flex:0 0 auto;}
+  .opt.on{border-color:var(--cart);background:#F1F6FC;}
+  .opt.on .bx{background:var(--cart);border-color:var(--cart);}
+  textarea{width:100%;min-height:110px;border:1px solid var(--line2);border-radius:5px;
+           padding:12px;font-family:inherit;font-size:14px;resize:vertical;}
+  .tin{width:100%;border:1px solid var(--line2);border-radius:5px;padding:13px;
+       font-family:inherit;font-size:15px;}
+  .priv{font-size:11.5px;color:#8A94A2;margin-top:8px;line-height:1.55;}
+  .mhead{display:grid;grid-template-columns:1.45fr repeat(5,1fr);
+         align-items:center;margin-bottom:6px;}
+  .mhead i{font-style:normal;font-size:10px;color:#8A94A2;text-align:center;}
+  .mrowq{display:grid;grid-template-columns:1.45fr repeat(5,1fr);align-items:center;
+         padding:9px 0;border-top:1px solid var(--line2);}
+  .mrowq .lb{font-size:13px;font-weight:600;padding-right:6px;line-height:1.35;}
+  .mrowq .dot{display:flex;justify-content:center;}
+  .mrowq .dot span{width:24px;height:24px;border:1.5px solid #B6BEC8;border-radius:50%;
+                   display:flex;align-items:center;justify-content:center;
+                   font-size:11.5px;color:#98A2AD;cursor:pointer;}
+  .mrowq .dot span.on{background:var(--cart);border-color:var(--cart);color:#fff;font-weight:700;}
+  #help{position:fixed;right:14px;bottom:16px;z-index:50;background:#fff;
+        border:1px solid var(--line);border-radius:22px;padding:10px 15px;
+        font-size:12.5px;font-weight:700;color:#16375C;cursor:pointer;
+        box-shadow:0 3px 12px rgba(0,0,0,.18);display:none;font-family:inherit;}
+  #help.on{display:block;}
+  pre#out{white-space:pre-wrap;word-break:break-all;background:#F4F6F8;
+          border:1px solid var(--line2);border-radius:5px;padding:14px;
+          font-size:11.5px;line-height:1.6;font-family:ui-monospace,Menlo,monospace;}
+  #sendstat{margin:0 0 14px;}
+  #sendstat .st{display:block;border-radius:6px;padding:13px 14px;
+                font-size:13.5px;font-weight:700;line-height:1.5;}
+  #sendstat .wait{background:#F1F3F5;color:#5A646E;}
+  #sendstat .ok{background:#E9F7F2;color:#0B7A5E;border:1px solid #A8DCCB;}
+  #sendstat .bad{background:#FDEEEC;color:#B5372C;border:1px solid #F0BFB8;}
+  #sendstat .warn{background:#FFF8E6;color:#8A6212;border:1px solid #EDD79A;}
+  .sendrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;}
+  .sendrow button{border:0;border-radius:4px;padding:14px;font-size:14px;
+                  font-weight:700;cursor:pointer;font-family:inherit;color:#fff;}
+
+  /* ===== 과제 고정 띠 ===== */
+  .band{position:fixed;top:0;left:50%;transform:translateX(-50%);
+        width:100%;max-width:430px;z-index:900;display:none;
+        background:rgba(255,248,219,.62);
+        -webkit-backdrop-filter:saturate(140%) blur(9px);
+        backdrop-filter:saturate(140%) blur(9px);
+        border-bottom:1px solid rgba(180,150,50,.30);
+        box-shadow:0 2px 10px rgba(0,0,0,.05);
+        padding:6px 12px 7px;line-height:1.25;
+        white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .band.on{display:block;}
+  .band .bl{display:inline-block;background:rgba(190,155,40,.20);
+            border-radius:3px;font-size:10.5px;font-weight:800;color:#7A6015;
+            padding:2px 6px;margin-right:6px;vertical-align:1px;}
+  .band .bt{display:inline;font-size:13px;font-weight:800;color:#4A3E10;
+            letter-spacing:-.3px;}
+  #s1,#s2,#s3,#s5,#s6{padding-top:70px;}
+  .guide{background:#FFF8DB;border:1px solid #E2CE86;border-left:4px solid #C79A1E;
+         border-radius:6px;padding:14px 15px;margin-top:18px;}
+  .guide p{margin:0;font-size:14px;line-height:1.6;color:#4A3E10;font-weight:600;
+           display:flex;align-items:flex-start;gap:9px;}
+  .guide p+p{margin-top:11px;padding-top:11px;border-top:1px solid rgba(190,160,60,.28);}
+  .guide .gn{flex:0 0 19px;height:19px;margin-top:2px;border-radius:50%;
+             background:#C79A1E;color:#fff;font-size:11px;font-weight:800;
+             display:flex;align-items:center;justify-content:center;}
+  .guide b{font-weight:800;color:#3B3208;}
+  .guide .tt{font-size:11px;font-weight:800;letter-spacing:1px;color:#9A7A22;
+             margin-bottom:8px;}
+  .hmbtn{cursor:pointer;}
+
+  /* ===== 06 구매내역 ===== */
+  .sumc{margin:12px 13px 0;border:1.5px solid #C9D0D8;border-radius:7px;
+        background:#fff;padding:4px 12px;}
+  .sumc .sr{display:grid;grid-template-columns:1fr 1fr;}
+  .sumc .sr+.sr{border-top:1px solid #E7EBEF;}
+  .sumc .sc{display:flex;justify-content:space-between;align-items:baseline;
+            padding:11px 0;font-size:14px;}
+  .sumc .sc:nth-child(odd){padding-right:11px;}
+  .sumc .sc:nth-child(even){padding-left:11px;border-left:1px solid #E7EBEF;}
+  .sumc .sc b{font-weight:800;color:#333B44;}
+  .sumc .sc span{color:var(--red);font-weight:800;font-size:15px;}
+  .sumc .sc i{font-style:normal;color:#333B44;font-weight:700;font-size:12.5px;margin-left:3px;}
+  .hdl{display:flex;justify-content:center;margin:-1px 0 10px;}
+  .hdl div{background:#5E6B78;color:#fff;border-radius:0 0 9px 9px;
+           padding:2px 26px 4px;font-size:11px;}
+  .xls{display:flex;justify-content:flex-end;padding:0 13px 10px;}
+  .xls div{border:1.5px solid #1D7044;border-radius:5px;color:#1D7044;
+           font-weight:800;font-size:13px;padding:8px 13px;background:#fff;}
+  .tabs2{display:grid;grid-template-columns:1.05fr 1.25fr 1.2fr;
+         border-bottom:1px solid var(--line);}
+  .tabs2 div{text-align:center;padding:11px 2px 10px;font-size:13.5px;
+             font-weight:700;color:#8A939D;cursor:pointer;}
+  .tabs2 div.on{color:var(--pick);border-bottom:2.5px solid var(--pick);}
+  .filt{display:grid;grid-template-columns:1fr 1fr 74px;gap:7px;padding:13px;}
+  .filt .fx{border:1px solid #B9C1CA;border-radius:4px;background:#F1F3F5;
+            padding:11px 10px;font-size:13.5px;font-weight:700;
+            display:flex;justify-content:space-between;align-items:center;color:#3A434C;}
+  .filt .fq{grid-row:span 2;border:1.5px solid #333B44;border-radius:3px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:14px;font-weight:800;text-decoration:underline;background:#fff;}
+  .rec{margin:2px 13px 13px;border:1.5px solid #C9D0D8;border-radius:8px;
+       background:#fff;overflow:hidden;}
+  .rec .rh{display:flex;align-items:center;gap:9px;padding:12px 12px 10px;}
+  .rec .rb{background:#4FB3DE;color:#fff;font-weight:800;font-size:14px;
+           border-radius:14px;padding:5px 13px;}
+  .rec .rd{font-size:13.5px;font-weight:700;color:#3A434C;}
+  .rec table{width:100%;border-collapse:collapse;}
+  .rec th{background:#F1F3F5;border-top:1px solid #DDE2E7;border-bottom:1px solid #DDE2E7;
+          font-size:12.5px;font-weight:700;color:#4A545E;padding:7px 4px;line-height:1.35;}
+  .rec td{padding:10px 8px;font-size:12.5px;vertical-align:top;}
+  .rec td.l{border-right:1px solid #E7EBEF;}
+  .rec .sk{color:var(--pick);font-weight:800;}
+  .rec .am{color:var(--red);font-weight:800;}
+  .rec .ft{padding:9px 12px 12px;font-size:13.5px;font-weight:700;}
+  .empty{margin:20px 13px;text-align:center;color:#98A2AC;font-size:14px;
+         border:1px dashed #CDD5DD;border-radius:8px;padding:34px 10px;}
+
+  /* ===== 설문 공통 ===== */
+  .opts{display:grid;gap:7px;margin-top:10px;}
+  .opts label{display:flex;align-items:center;gap:10px;border:1px solid var(--line2);
+              border-radius:6px;padding:12px 13px;font-size:14.5px;cursor:pointer;
+              background:#fff;}
+  .opts input{width:17px;height:17px;accent-color:var(--pick);flex:0 0 auto;}
+  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:9px;}
+  .scale label{cursor:pointer;}
+  .scale input{display:none;}
+  .scale span{display:block;border:1px solid var(--line2);border-radius:6px;
+              padding:12px 0;text-align:center;font-size:15px;font-weight:800;
+              color:#5A646E;background:#fff;}
+  .scale input:checked+span{background:var(--pick);border-color:var(--pick);color:#fff;}
+  .sends{display:flex;justify-content:space-between;font-size:11.5px;
+         color:var(--mut);margin-top:6px;padding:0 2px;}
+  .t2box{border:1.5px solid var(--buy);border-radius:8px;background:#F1FBF8;
+         padding:16px 15px;margin-top:16px;}
+  .t2box .lb{font-size:11px;font-weight:800;color:var(--buy);letter-spacing:1px;
+             margin-bottom:7px;}
+  .t2box .tx{font-size:16px;font-weight:800;line-height:1.5;color:#1B2A36;}
+</style>
+</head>
+<body>
+<div id="app">
+
+<div class="band" id="band"><div class="bl" id="bandlb">과제 1</div><div class="bt" id="bandtx"></div></div>
+
+<!-- ===== 안내문 ===== -->
+<section class="screen on" id="s-intro">
+  <div class="doc">
+    <h1>전자 마권 앱 사용성 평가</h1>
+    <div class="lead">
+      한국마사회 전자 마권 앱의 사용성을 살펴보는 학술 연구입니다.<br>
+      화면은 <b>실제 마사회 더비온 앱 화면</b>으로 구성되어 있으며,<br>
+      실제 금액은 오가지 않고 앱을 다루는 과정만 기록합니다.<br>
+      <b>여러분의 능력이 아니라 앱의 사용성을 평가합니다.</b>
+    </div>
+    <div class="term">
+      <div class="tg">경마</div>
+      <p>여러 마리의 말이 함께 달려 순위를 겨루는 경기입니다.<br>
+      한 번의 경기를 <b>경주</b>라 하며, 경마장별로 경주에 번호가 붙습니다.</p>
+    </div>
+    <div class="term">
+      <div class="tg">마권</div>
+      <p>어떤 말이 몇 등으로 들어올지 예상하고 사는 표입니다.<br>
+      예상이 맞으면 배당에 따라 환급을 받습니다.</p>
+    </div>
+    <div class="term">
+      <div class="tg">승식</div>
+      <p>맞히는 방식을 승식이라고 하며 일곱 가지가 있습니다.<br>
+      이번 과제에서 사용할 <b>단승식</b>은 <b>1등으로 들어올 말 한 마리를 맞히는 방식</b>입니다.</p>
+    </div>
+
+    <div class="taskbox">
+      <div class="lb">과제 1</div>
+      <div class="tx">9월 12일(토) 서울 3경주에서 7번 말이 1등 할 것으로 예상하는 마권을 5,000원어치 구매해 주십시오.</div>
+    </div>
+    <div class="taskbox" style="margin-top:10px">
+      <div class="lb">과제 2</div>
+      <div class="tx">구매하신 마권이 제대로 구매되었는지 앱에서 확인해 주십시오.</div>
+    </div>
+    <div class="guide">
+      <div class="tt">진행하시기 전에</div>
+      <p><span class="gn">1</span><span>과제 내용은 <b>화면 맨 위에 계속 표시</b>되므로 외우지 않으셔도 됩니다.</span></p>
+      <p><span class="gn">2</span><span>선택을 마치면 <b>화면 아래쪽 버튼</b>을 눌러 다음으로 넘어갑니다.</span></p>
+      <p><span class="gn">3</span><span>화면 <b>왼쪽 위의 집 모양 아이콘</b>을 누르면 첫 화면으로 돌아갑니다.</span></p>
+      <p><span class="gn">4</span><span>이번 과제에 필요하지 않은 <b>일부 버튼은 눌러도 동작하지 않습니다.</b></span></p>
+      <p><span class="gn">5</span><span>중간에 <b>다른 앱으로 나가거나 화면을 새로 고치면 처음부터 다시 하셔야 합니다.</b> 끝까지 이어서 진행해 주십시오.</span></p>
+      <p><span class="gn">6</span><span>총 소요 시간은 <b>약 10분</b> 정도 걸립니다.</span></p>
+    </div>
+  </div>
+  <div class="btm" style="padding-top:12px"><button class="bigbtn" onclick="start()">시작하기</button></div>
+</section>
+
+<!-- ===== 01 홈 ===== -->
+<section class="screen" id="s1">
+  <div class="hd"><span class="l"><svg class="hmbtn" onclick="goHome()" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 10.2 12 3.4l8.4 6.8"/><path d="M5.6 11.6V20h12.8v-8.4"/><path d="M9.9 20v-5.2h4.2V20"/></svg><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="11" cy="10" r="7.5"/><path d="M8.8 8.2c0-1.3 1-2.2 2.2-2.2s2.2.9 2.2 2.1c0 1.6-2.2 1.7-2.2 3.3M11 14.3v.1" stroke-linecap="round"/></svg></span><span class="lg"><svg viewBox="0 0 34 26" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 22V5h8c3.4 0 5.6 2.2 5.6 5s-2.2 5-5.6 5h-6"/><path d="M16 15l8.5 7"/></svg></span><span class="r"><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2.2l2.6 9.4h8.6L19 6.6H6.6"/><circle cx="9" cy="17.4" r="1.5"/><circle cx="16" cy="17.4" r="1.5"/></svg><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M3.5 6.5h15M3.5 11h15M3.5 15.5h15"/></svg></span></div>
+  <div class="home">
+    <div class="r1">
+      <span class="nim">님</span>
+      <span class="rf">↻ 새로고침</span>
+      <span class="bz"><b>m</b><i>브론즈</i></span>
+    </div>
+    <div class="lb">회원번호(온라인 회원)</div>
+    <div class="r2">
+      <div class="no">000000-0000</div>
+      <div class="bio">생체인증 완료</div>
+    </div>
+    <div class="r3">
+      <div onclick="tap('s1','마이페이지',0)">마이페이지</div>
+      <div onclick="tap('s1','로그아웃',0)">로그아웃</div>
+    </div>
+    <div class="r4">
+      <div class="c"><span class="lft">잔액 <span class="tag">이체</span></span><span>999,900 원</span></div>
+      <div class="c"><span class="lft">포인트 <span class="arw">›</span></span><span>0 P</span></div>
+      <div class="c"><span class="lft">구매액</span><span>0 원</span></div>
+      <div class="c"><span class="lft">쿠폰 <span class="arw">›</span></span><span></span></div>
+    </div>
+  </div>
+  <div class="white">
+    <div class="livebar" onclick="tap('s1','현재경주 LIVE',0)">현재경주 <span class="b">LIVE</span> 보기</div>
+    <div class="tk">
+      <div class="card" onclick="tap('s1','서울1경주 카드',0)">
+        <div class="top" style="border-color:#7FC4DE">
+          <div class="nm" style="color:#2E7BB5">서울 1경주</div>
+          <div class="ul" style="background:#BBDCEC"></div>
+          <div class="od">505</div><div class="bn">분전</div>
+          <div class="notch"><i class="l" style="border-color:#7FC4DE"></i><i class="r" style="border-color:#7FC4DE"></i></div>
+        </div>
+        <div class="gb" style="background:#2A93C4">바로구매</div>
+      </div>
+      <div class="card" onclick="tap('s1','부산1경주 카드',0)">
+        <div class="top" style="border-color:#7FD4C0">
+          <div class="nm" style="color:#149B78">부산 1경주</div>
+          <div class="ul" style="background:#B5E3D6"></div>
+          <div class="od">615</div><div class="bn">분전</div>
+          <div class="notch"><i class="l" style="border-color:#7FD4C0"></i><i class="r" style="border-color:#7FD4C0"></i></div>
+        </div>
+        <div class="gb" style="background:#0FA88A">바로구매</div>
+      </div>
+    </div>
+  </div>
+  <div class="mrow">
+    <div class="mi" onclick="tap('s1','마권 예매',1,()=>go('s2'))"><span class="ic"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="5" width="17" height="28" rx="2.5"/><path d="M13 8h5"/><circle cx="26" cy="22" r="9" fill="#7FD4F0" stroke="#fff"/><path d="M22 18l2.6 5.4M30 18l-2.6 5.4M24.6 23.4h2.8M23.3 26h5.4M23.3 28.4h5.4" stroke="#1E56A8" stroke-width="1.7"/></svg></span>마권 예매</div>
+    <div class="mi" onclick="tap('s1','경주정보',0)"><span class="ic"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 33V23c0-4 3-6.5 7-6.5h8.5L24 10c1-2.4 3-4.2 5.3-4.6L28 2.5l4.6 3.2c2 1.4 2.6 4 1.4 6-.9 1.6-2.6 2.5-4.4 2.5h-1.2l-2 3.4-1.6 3.6V33"/><path d="M12 16.5V33M19.5 18.6V33M6 23c-2-.4-3.2-2-3-4"/></svg></span>경주정보</div>
+    <div class="mi" onclick="mnHist()"><span class="ic"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="13.5" fill="#7FD4F0" stroke="#fff" stroke-width="1.9"/><circle cx="20" cy="20" r="10.5" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M14.5 14.5l3.2 7M25.5 14.5l-3.2 7M17.7 21.5h4.6M15.6 24h8.8M15.6 26.6h8.8" stroke="#1E56A8" stroke-width="1.8" stroke-linecap="round"/></svg></span>구매내역조회</div>
+    <div class="mi" onclick="tap('s1','확정배당률',0)"><span class="ic"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 32V7h20v11"/><path d="M8 32h11"/><path d="M16 7h7v6l-3.5-2.2L16 13z" fill="#7FD4F0" stroke="#7FD4F0"/><circle cx="25" cy="25" r="6.5"/><path d="M30 30l4 4"/></svg></span>확정배당률</div>
+  </div>
+  <div class="tiles">
+    <div style="background:#4CC6DC" onclick="tap('s1','좌석 타일',0)"><svg viewBox="0 0 64 48" fill="none"><rect x="12" y="10" width="40" height="16" rx="4" fill="#2E56C4"/><rect x="6" y="20" width="52" height="14" rx="4" fill="#3E6FD1"/><circle cx="10" cy="24" r="3.4" fill="#E05A4A"/><circle cx="54" cy="24" r="3.4" fill="#E05A4A"/><rect x="14" y="38" width="36" height="2.6" rx="1.3" fill="#fff"/></svg></div>
+    <div style="background:#0FBFA0" onclick="tap('s1','티켓 타일',0)"><svg viewBox="0 0 64 48" fill="none"><rect x="14" y="6" width="36" height="8" rx="2" fill="#fff"/><rect x="17" y="3" width="4" height="4" rx="1" fill="#2E3B48"/><rect x="43" y="3" width="4" height="4" rx="1" fill="#2E3B48"/><path d="M18 14h28v20l-3.5-3-3.5 3-3.5-3-3.5 3-3.5-3-3.5 3-3.5-3-3.5 3z" fill="#fff"/><path d="M22 19h20M22 23h20M22 27h14" stroke="#9AA8B4" stroke-width="1.6" stroke-linecap="round"/><rect x="20" y="33" width="24" height="9" rx="1.5" fill="#C9D2DA"/><text x="32" y="39.6" font-size="6" font-family="Arial" font-weight="700" fill="#4A5560" text-anchor="middle">TICKET</text></svg></div>
+    <div style="background:#4A9FE8" onclick="tap('s1','안전 타일',0)"><svg viewBox="0 0 64 48" fill="none"><path d="M32 4l16 5v13c0 10-7 17-16 20-9-3-16-10-16-20V9z" fill="#F5C633"/><path d="M32 8l12 3.8v10.4c0 7.6-5 13-12 15.4-7-2.4-12-7.8-12-15.4V11.8z" fill="#FFD84D"/><path d="M25 23.5l5 5 9-9.5" stroke="#2E6BC6" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+  </div>
+  <div style="flex:1"></div>
+</section>
+
+<!-- ===== 02 경주 선택 ===== -->
+<section class="screen" id="s2">
+  <div class="hd"><span class="l"><svg class="hmbtn" onclick="goHome()" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 10.2 12 3.4l8.4 6.8"/><path d="M5.6 11.6V20h12.8v-8.4"/><path d="M9.9 20v-5.2h4.2V20"/></svg><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="11" cy="10" r="7.5"/><path d="M8.8 8.2c0-1.3 1-2.2 2.2-2.2s2.2.9 2.2 2.1c0 1.6-2.2 1.7-2.2 3.3M11 14.3v.1" stroke-linecap="round"/></svg></span><span class="c">마권구매</span><span class="r"><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2.2l2.6 9.4h8.6L19 6.6H6.6"/><circle cx="9" cy="17.4" r="1.5"/><circle cx="16" cy="17.4" r="1.5"/></svg><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M3.5 6.5h15M3.5 11h15M3.5 15.5h15"/></svg></span></div>
+  <div class="body">
+    <div class="sect">요일 선택</div>
+    <div class="grid g3" id="g-day">
+      <div class="cell tall" onclick="pick('day',this,'금요일','g-day')">금요일<span class="sub">2026.09.11</span></div>
+      <div class="cell tall" onclick="pick('day',this,'토요일','g-day')">토요일<span class="sub">2026.09.12</span></div>
+      <div class="cell tall" onclick="pick('day',this,'일요일','g-day')">일요일<span class="sub">2026.09.13</span></div>
+    </div>
+    <div class="sect">파크 선택</div>
+    <div class="grid g3" id="g-park">
+      <div class="cell mid" style="color:#1E9BC4" onclick="pick('park',this,'서울','g-park')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l7 5H5z"/><path d="M7 9v7M12 9v7M17 9v7M4 18h16M6 21h12"/></svg><span>서울</span></div>
+      <div class="cell mid" style="color:#17B08A" onclick="pick('park',this,'부산경남','g-park')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5c1-1.6 3-2.4 4.6-1.4"/><rect x="7" y="7" width="10" height="13" rx="3"/><path d="M9.5 11h5M9.5 14.5h5"/></svg><span>부산경남</span></div>
+      <div class="cell mid" style="color:#F08070" onclick="pick('park',this,'제주','g-park')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h8v3H8z"/><path d="M9 9v11h6V9"/><circle cx="11" cy="12.5" r="1"/><circle cx="14" cy="12.5" r="1"/><path d="M11 16h3"/></svg><span>제주</span></div>
+    </div>
+    <div class="sect">경주번호 선택</div>
+    <div class="grid g4" id="g-race"></div>
+  </div>
+  <div class="btm"><button class="bigbtn" onclick="next2()">다음</button></div>
+</section>
+
+<!-- ===== 03 구매표 ===== -->
+<section class="screen" id="s3">
+  <div class="hd"><span class="l"><svg class="hmbtn" onclick="goHome()" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 10.2 12 3.4l8.4 6.8"/><path d="M5.6 11.6V20h12.8v-8.4"/><path d="M9.9 20v-5.2h4.2V20"/></svg><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="11" cy="10" r="7.5"/><path d="M8.8 8.2c0-1.3 1-2.2 2.2-2.2s2.2.9 2.2 2.1c0 1.6-2.2 1.7-2.2 3.3M11 14.3v.1" stroke-linecap="round"/></svg></span><span class="c">구매표</span><span class="r"><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2.2l2.6 9.4h8.6L19 6.6H6.6"/><circle cx="9" cy="17.4" r="1.5"/><circle cx="16" cy="17.4" r="1.5"/></svg><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M3.5 6.5h15M3.5 11h15M3.5 15.5h15"/></svg></span></div>
+  <div class="subbar">
+    <div id="sb1">일요일&gt;부산경남&gt;3R</div>
+    <div>출발시각 <span class="hl">18:20</span> 마감 <span class="hl">44</span>분전</div>
+  </div>
+  <div class="tabs">
+    <div class="tab" onclick="tap('s3','현재배당',0)">현재배당</div>
+    <div class="tab" onclick="tap('s3','인기배당',0)">인기배당</div>
+    <div class="tab" onclick="tap('s3','경주정보',0)">경주정보</div>
+    <div class="tab" onclick="tap('s3','예상전개',0)">예상전개</div>
+  </div>
+  <div class="rtitle" id="rt">부산경남&gt;3경주</div>
+  <div class="picks">
+    <div class="pk on">1</div><div class="pk">2</div><div class="pk">3</div>
+    <div class="gapc">
+      <div class="pkb" onclick="tap('s3','전체선택',0)">전체선택</div>
+      <div class="pkb" onclick="tap('s3','자동선택',0)">자동선택</div>
+      <div class="pkb" onclick="tap('s3','크게보기',0)">크게보기</div>
+    </div>
+  </div>
+  <div class="body" style="padding-top:14px;padding-bottom:0">
+    <div class="grid g7" id="g-sik" style="margin-bottom:16px"></div>
+    <div class="grid g8" id="g-no" style="margin-bottom:18px"></div>
+    <div class="grid g7" id="g-amt"></div>
+  </div>
+  <div class="sumwrap">
+    <div class="sumbox">
+      <div><div class="k">경주당 구매한도</div><div class="v">100,000</div></div>
+      <div><div class="k">잔액</div><div class="v">999,900</div></div>
+      <div><div class="k">구매합계</div><div class="v red" id="tot">0</div></div>
+    </div>
+  </div>
+  <div class="btm" style="padding-top:14px">
+    <div class="row3">
+      <button class="b-out" onclick="reset3()">초기화</button>
+      <button class="b-cart" onclick="tap('s3','카트담기',0)">카트담기</button>
+      <button class="b-buy" onclick="buy()">바로구매</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 04 팝업 ===== -->
+<div class="dim-bg" id="pop">
+  <div class="pop">
+    <div class="ph">바로구매</div>
+    <div class="box">
+      <div class="r" id="p1">부산경남-일요일-3경주</div>
+      <div class="d" id="p2">단승 7 5000</div>
+      <hr>
+      <div class="s">합계 : <b id="p3">5,000원</b></div>
+    </div>
+    <div class="w1">유효하게 구매된 마권은 정정이나<br>취소를 할 수 없습니다.</div>
+    <div class="w2">위 내용으로 구매하시겠습니까?</div>
+    <div class="pf">
+      <button class="no" onclick="tap('s4','팝업취소',0,closePop)">취소</button>
+      <button class="yes" onclick="tap('s4','팝업 바로구매',1,confirmBuy)">바로구매</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 05 구매 완료 ===== -->
+<section class="screen" id="s5">
+  <div class="hd"><span class="l"><svg class="hmbtn" onclick="goHome()" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 10.2 12 3.4l8.4 6.8"/><path d="M5.6 11.6V20h12.8v-8.4"/><path d="M9.9 20v-5.2h4.2V20"/></svg><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="11" cy="10" r="7.5"/><path d="M8.8 8.2c0-1.3 1-2.2 2.2-2.2s2.2.9 2.2 2.1c0 1.6-2.2 1.7-2.2 3.3M11 14.3v.1" stroke-linecap="round"/></svg></span><span class="c">마권구매</span><span class="r"><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2.2l2.6 9.4h8.6L19 6.6H6.6"/><circle cx="9" cy="17.4" r="1.5"/><circle cx="16" cy="17.4" r="1.5"/></svg><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M3.5 6.5h15M3.5 11h15M3.5 15.5h15"/></svg></span></div>
+  <div class="rs">
+    <div class="h0">구매결과</div>
+    <div class="h1" id="r0">부산경남 3경주 18시 20분 (장내구매)</div>
+    <div class="ln"><span class="lft"><span id="r1a">단승</span><span id="r1b">5000</span><span id="r1c">7</span></span><span class="rgt"><b id="r1d">5,000원</b></span></div>
+    <div class="ln"><span style="font-weight:800" id="r2a">5000*1 매</span><span class="rgt"><span class="gye">계</span><b id="r2b">5,000원</b></span></div>
+    <div class="ln"><span style="font-weight:800">총 구매금액</span><span class="rgt"><span class="gye">계</span><b id="r3b">5,000원</b></span></div>
+    <div class="ln"><span style="font-weight:800">구매시간</span><span class="tm" id="r4">—</span></div>
+  </div>
+  <div class="rbtns">
+    <div style="background:#22303F" onclick="tap('s5','다른 경주 구매',0)">다른 경주 구매</div>
+    <div style="background:#3B62B8" onclick="tap('s5','동일 경주 구매',0)">동일 경주 구매</div>
+    <div style="background:var(--buy)" onclick="tap('s5','동일내역 재구매',0)">동일내역 재구매</div>
+  </div>
+  <div style="flex:1"></div>
+  <div class="btm"><button class="bigbtn" onclick="endT1()">평가 계속하기</button></div>
+</section>
+
+
+<!-- ===== 06 구매내역 ===== -->
+<section class="screen" id="s6">
+  <div class="hd"><span class="l"><svg class="hmbtn" onclick="goHome()" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 10.2 12 3.4l8.4 6.8"/><path d="M5.6 11.6V20h12.8v-8.4"/><path d="M9.9 20v-5.2h4.2V20"/></svg><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="11" cy="10" r="7.5"/><path d="M8.8 8.2c0-1.3 1-2.2 2.2-2.2s2.2.9 2.2 2.1c0 1.6-2.2 1.7-2.2 3.3M11 14.3v.1" stroke-linecap="round"/></svg></span><span class="c">구매내역</span><span class="r"><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2.2l2.6 9.4h8.6L19 6.6H6.6"/><circle cx="9" cy="17.4" r="1.5"/><circle cx="16" cy="17.4" r="1.5"/></svg><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M3.5 6.5h15M3.5 11h15M3.5 15.5h15"/></svg></span></div>
+  <div style="background:#F1F3F5;padding:1px 0 12px;">
+    <div class="sumc">
+      <div class="sr">
+        <div class="sc"><b>구매액</b><span id="h-buy">0<i>원</i></span></div>
+        <div class="sc"><b>환급액</b><span>0<i>원</i></span></div>
+      </div>
+      <div class="sr">
+        <div class="sc"><b>취소액</b><span>0<i>원</i></span></div>
+        <div class="sc"><b>환불액</b><span>0<i>원</i></span></div>
+      </div>
+      <div class="sr">
+        <div class="sc"><b>지급조서</b><span>0<i>원</i></span></div>
+        <div class="sc"><b>사용보류</b><span>0<i>원</i></span></div>
+      </div>
+      <div class="sr">
+        <div class="sc"><b>구매건수</b><span id="h-cnt">0<i>건</i></span></div>
+        <div class="sc"><b>취소건수</b><span>0<i>건</i></span></div>
+      </div>
+    </div>
+    <div class="hdl"><div>&#9650;</div></div>
+  </div>
+  <div class="xls"><div onclick="tap('s6','엑셀 다운',0)">&#128202; 엑셀 다운</div></div>
+  <div class="tabs2">
+    <div class="on" onclick="tap('s6','마권 구매내역 탭',0)">마권 구매내역</div>
+    <div onclick="tap('s6','전자카드 계좌내역 탭',0)">전자카드 계좌내역</div>
+    <div onclick="tap('s6','외부 입출금 내역 탭',0)">외부 입출금 내역</div>
+  </div>
+  <div class="filt">
+    <div class="fx" onclick="tap('s6','구매일 필터',0)"><span>구매일</span><span>&#9662;</span></div>
+    <div class="fx" onclick="tap('s6','경마장 필터',0)"><span>경마장</span><span>&#9662;</span></div>
+    <div class="fq" onclick="tap('s6','조회',0)">조회</div>
+    <div class="fx" onclick="tap('s6','경주 필터',0)"><span>경주</span><span>&#9662;</span></div>
+    <div class="fx" onclick="tap('s6','날짜 선택',0)"><span id="h-date">2026-09-12</span><span>&#128197;</span></div>
+  </div>
+  <div id="h-list"></div>
+  <div style="flex:1"></div>
+  <div class="btm" id="s6btm" style="display:none">
+    <button class="bigbtn" onclick="endT2()">다음</button>
+  </div>
+</section>
+
+<!-- ===== 설문 ===== -->
+<section class="screen" id="sv1">
+  <div class="doc">
+    <h1>과제 1을 마치셨습니다</h1>
+    <div class="lead">방금 진행하신 각 단계가 얼마나 어려우셨는지 표시해 주십시오.</div>
+    <div class="qbox">
+      <div class="q">각 단계가 얼마나 어려우셨습니까?</div>
+      <div class="mhead"><span></span><i>쉬움</i><i></i><i>보통</i><i></i><i>어려움</i></div>
+      <div id="q-mat"></div>
+    </div>
+  </div>
+  <div class="btm"><button class="bigbtn" onclick="goT2()">다음</button></div>
+</section>
+
+<section class="screen" id="s-t2">
+  <div class="doc">
+    <h1>과제 2</h1>
+    <div class="lead">마지막 과제입니다. 앞에서 하신 구매를 확인하는 과제입니다.</div>
+    <div class="t2box">
+      <div class="lb">과제 2</div>
+      <div class="tx">방금 구매하신 마권이 제대로 구매되었는지<br>앱에서 직접 확인해 주십시오.</div>
+    </div>
+    <div class="guide">
+      <div class="tt">기억하실 것</div>
+      <p><span class="gn">1</span><span>화면 <b>왼쪽 위의 집 모양 아이콘</b>을 누르면 첫 화면으로 돌아갑니다.</span></p>
+      <p><span class="gn">2</span><span>선택을 마치면 <b>화면 아래쪽 버튼</b>을 눌러 다음으로 넘어갑니다.</span></p>
+    </div>
+  </div>
+  <div class="btm"><button class="bigbtn" onclick="startT2()">시작하기</button></div>
+</section>
+
+<section class="screen" id="sv2">
+  <div class="doc">
+    <h1>과제 2를 마치셨습니다</h1>
+    <div class="lead">방금 하신 과제에 대해 두 가지만 여쭙겠습니다.</div>
+
+    <div class="qbox">
+      <div class="q">1. 구매내역을 확인하는 과정이 얼마나 어려우셨습니까?</div>
+      <div class="scale">
+        <label><input type="radio" name="t2d" value="1"><span>1</span></label>
+        <label><input type="radio" name="t2d" value="2"><span>2</span></label>
+        <label><input type="radio" name="t2d" value="3"><span>3</span></label>
+        <label><input type="radio" name="t2d" value="4"><span>4</span></label>
+        <label><input type="radio" name="t2d" value="5"><span>5</span></label>
+      </div>
+      <div class="sends"><span>쉬움</span><span>어려움</span></div>
+    </div>
+
+    <div class="qbox">
+      <div class="q">2. 구매내역을 볼 수 있는 곳을 찾기까지 어떠셨습니까?</div>
+      <div class="opts">
+        <label><input type="radio" name="t2f" value="바로 눈에 띄었다">첫 화면에서 바로 눈에 띄었다</label>
+        <label><input type="radio" name="t2f" value="훑어보고 찾았다">화면을 훑어보다가 찾았다</label>
+        <label><input type="radio" name="t2f" value="다른 곳을 먼저 눌러봤다">다른 곳을 먼저 눌러본 뒤에 찾았다</label>
+        <label><input type="radio" name="t2f" value="끝내 찾지 못했다">끝내 찾지 못했다</label>
+      </div>
+    </div>
+  </div>
+  <div class="btm"><button class="bigbtn" onclick="goLast()">다음</button></div>
+</section>
+
+<section class="screen" id="sv3">
+  <div class="doc">
+    <h1>마지막입니다</h1>
+    <div class="lead">전체 과정에 대해 여쭙겠습니다.</div>
+
+    <div class="qbox">
+      <div class="q">1. 성함을 적어 주십시오.</div>
+      <input id="q-name" class="tin" type="text" placeholder="이름">
+      <div class="priv">응답을 구별하기 위한 용도로만 사용하며, 그 외의 목적으로는 일절 사용하지 않습니다.</div>
+    </div>
+
+    <div class="qbox">
+      <div class="q">2. 연령대를 골라 주십시오.</div>
+      <div class="opts">
+        <label><input type="radio" name="age" value="20대">20대</label>
+        <label><input type="radio" name="age" value="30대">30대</label>
+        <label><input type="radio" name="age" value="40대">40대</label>
+        <label><input type="radio" name="age" value="50대 이상">50대 이상</label>
+      </div>
+    </div>
+
+    <div class="qbox">
+      <div class="q">3. 현재 무엇을 하고 계십니까?</div>
+      <div class="opts">
+        <label><input type="radio" name="job" value="학생">학생</label>
+        <label><input type="radio" name="job" value="디자인·IT">디자인 · IT 직군</label>
+        <label><input type="radio" name="job" value="사무·관리직">사무 · 관리직</label>
+        <label><input type="radio" name="job" value="전문직">전문직</label>
+        <label><input type="radio" name="job" value="서비스·판매직">서비스 · 판매직</label>
+        <label><input type="radio" name="job" value="자영업">자영업</label>
+        <label><input type="radio" name="job" value="기타">기타</label>
+      </div>
+    </div>
+
+    <div class="qbox">
+      <div class="q">4. 불편했던 점을 자유롭게 적어 주십시오.</div>
+      <textarea id="q-free" placeholder="화면을 쓰면서 불편했던 점을 적어 주십시오."></textarea>
+    </div>
+  </div>
+  <div class="btm"><button class="bigbtn" onclick="submit()">제출하기</button></div>
+</section>
+
+<!-- ===== 결과 ===== -->
+<section class="screen" id="s-end">
+  <div class="doc">
+    <h1>제출이 완료되었습니다</h1>
+    <div class="lead">참여해 주셔서 감사합니다.</div>
+    <div id="sendstat"></div>
+    <pre id="out"></pre>
+    <div class="sendrow">
+      <button style="background:var(--buy)" onclick="shareOut()">결과 보내기</button>
+      <button style="background:#16375C" onclick="copyOut()">결과 복사</button>
+    </div>
+    <div class="sendrow" style="grid-template-columns:1fr">
+      <button style="background:#6C7A89" onclick="dlOut()">파일로 저장</button>
+    </div>
+    <div class="note" id="copymsg"></div>
+  </div>
+</section>
+
+</div>
+
+<script>
+const ANS={day:"토요일",park:"서울",race:"3R",sik:"단승",no:"7",amtN:5000};
+const TIMES=['18시 00분','18시 10분','18시 20분','18시 30분','18시 40분','18시 50분',
+             '19시 00분','19시 10분','19시 20분','19시 30분','19시 40분'];
+const BANDS={
+  1:{lb:'과제 1',tx:'9/12(토) 서울 3R · 단승 7번 · 5,000원'},
+  2:{lb:'과제 2',tx:'방금 구매한 마권 확인하기'}
+};
+const TASKSCR=['s1','s2','s3','s5','s6'];
+const STEPS=['마권 예매 화면 찾기','날짜·경마장·경주 고르기','승식 고르기','마번 고르기',
+             '금액 고르기','구매 확정하기'];
+const L={t0:0,screen:{},cur:null,curT:0,clicks:[],
+         wrong:{1:0,2:0},home:{1:0,2:0},
+         t1s:null,t1e:null,t2s:null,t2e:null,task:1,t2done:false};
+const sel={day:null,park:null,race:null,sik:null,no:null,amt:null,amtN:0};
+let BUY=null, RESULT='', SENT=false;
+const POST_URL='https://script.google.com/macros/s/AKfycbywgiRQErEkC3mWyjTqUS9ccnfyHxHLMcmrjZ1kMJ8_YMfMfhmmkxxzRt5Y49GTtg8NhA/exec';
+const PCODE=(function(){
+  const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let r=''; for(let i=0;i<4;i++) r+=c.charAt(Math.floor(Math.random()*c.length));
+  return r;
+})();
+const now=()=>Date.now();
+const stamp=()=>((now()-L.t0)/1000).toFixed(1);
+
+function go(id){
+  if(L.cur) L.screen[L.cur]=(L.screen[L.cur]||0)+(now()-L.curT)/1000;
+  document.querySelectorAll('.screen').forEach(e=>e.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  L.cur=id; L.curT=now();
+  const b=document.getElementById('band');
+  if(TASKSCR.includes(id)){
+    b.classList.add('on');
+    document.getElementById('bandlb').textContent=BANDS[L.task].lb;
+    document.getElementById('bandtx').innerHTML=BANDS[L.task].tx;
+    setTimeout(fitBand,0);
+  } else b.classList.remove('on');
+  document.getElementById('s6btm').style.display=(id==='s6'&&L.task===2)?'':'none';
+  window.scrollTo(0,0);
+  const bd=document.querySelector('#'+id+' .body'); if(bd) bd.scrollTop=0;
+}
+function fitBand(){
+  const h=document.getElementById('band').offsetHeight;
+  TASKSCR.forEach(k=>{
+    const e=document.getElementById(k);
+    if(e) e.style.paddingTop=(h+4)+'px';
+  });
+}
+window.addEventListener('resize',fitBand);
+function tap(scr,label,ok,fn){
+  L.clicks.push({t:stamp(),scr,label,ok:!!ok,task:L.task});
+  if(!ok) L.wrong[L.task]++;
+  if(fn) fn();
+}
+function goHome(){
+  if(L.cur==='s1'){
+    L.clicks.push({t:stamp(),scr:L.cur,label:'홈(이미 첫 화면)',ok:false,task:L.task});
+    L.wrong[L.task]++; return;
+  }
+  L.home[L.task]++;
+  L.clicks.push({t:stamp(),scr:L.cur,label:'홈 복귀',ok:null,task:L.task});
+  clearSel(); go('s1');
+}
+function clearSel(){
+  ['g-day','g-park','g-race','g-sik','g-no','g-amt'].forEach(g=>{
+    const el=document.getElementById(g);
+    if(el) el.querySelectorAll('.cell').forEach(x=>x.classList.remove('on'));
+  });
+  sel.day=sel.park=sel.race=sel.sik=sel.no=sel.amt=null; sel.amtN=0;
+  const t=document.getElementById('tot'); if(t) t.textContent='0';
+}
+function start(){ L.t0=now(); L.t1s=0; build(); go('s1'); }
+
+function build(){
+  const R=document.getElementById('g-race'); R.innerHTML='';
+  for(let i=1;i<=11;i++){
+    const d=document.createElement('div');
+    d.className='cell tall'; d.innerHTML=i+'R<span class="sub">'+TIMES[i-1]+'</span>';
+    d.onclick=()=>pick('race',d,i+'R','g-race');
+    R.appendChild(d);
+  }
+  for(let i=0;i<5;i++){
+    const d=document.createElement('div');
+    d.className='cell tall blank'; d.innerHTML='&nbsp;<span class="sub">&nbsp;</span>';
+    R.appendChild(d);
+  }
+  const S=document.getElementById('g-sik'); S.innerHTML='';
+  ['단승','연승','복승','쌍승','복연','삼복','삼쌍'].forEach(v=>{
+    const d=document.createElement('div');
+    d.className='cell sik'; d.textContent=v;
+    d.onclick=()=>pick('sik',d,v,'g-sik');
+    S.appendChild(d);
+  });
+  const N=document.getElementById('g-no'); N.innerHTML='';
+  for(let i=1;i<=16;i++){
+    const d=document.createElement('div');
+    d.className='cell small'+(i>11?' dim':''); d.textContent=i;
+    if(i<=11) d.onclick=()=>pick('no',d,String(i),'g-no');
+    N.appendChild(d);
+  }
+  const A=document.getElementById('g-amt'); A.innerHTML='';
+  [['1백',100],['2백',200],['3백',300],['5백',500],['1천',1000],['2천',2000],['3천',3000],
+   ['4천',4000],['5천',5000],['1만',10000],['2만',20000],['3만',30000],['5만',50000],['십만',100000]]
+   .forEach(([lb,v])=>{
+    const d=document.createElement('div');
+    d.className='cell small'; d.textContent=lb;
+    d.onclick=()=>pick('amt',d,lb,'g-amt',v);
+    A.appendChild(d);
+  });
+  const MT=document.getElementById('q-mat'); MT.innerHTML='';
+  STEPS.forEach(v=>{
+    const row=document.createElement('div');
+    row.className='mrowq'; row.dataset.k=v;
+    const lb=document.createElement('div');
+    lb.className='lb'; lb.textContent=v; row.appendChild(lb);
+    for(let j=1;j<=5;j++){
+      const c=document.createElement('div'); c.className='dot';
+      const sp=document.createElement('span'); sp.textContent=j;
+      sp.onclick=()=>{
+        row.querySelectorAll('.dot span').forEach(x=>x.classList.remove('on'));
+        sp.classList.add('on'); row.dataset.v=j;
+      };
+      c.appendChild(sp); row.appendChild(c);
+    }
+    MT.appendChild(row);
+  });
+}
+
+function pick(k,el,v,gid,n){
+  const box=document.getElementById(gid);
+  if(sel[k]===v){ el.classList.remove('on'); sel[k]=null; if(k==='amt') sel.amtN=0; }
+  else{
+    box.querySelectorAll('.cell').forEach(x=>x.classList.remove('on'));
+    el.classList.add('on'); sel[k]=v;
+    if(k==='amt') sel.amtN=n;
+  }
+  const map={day:ANS.day,park:ANS.park,race:ANS.race,sik:ANS.sik,no:ANS.no};
+  const ok=(k==='amt')?(n===ANS.amtN):(v===map[k]);
+  L.clicks.push({t:stamp(),scr:L.cur,label:k+'='+v,ok,task:L.task});
+  if(!ok) L.wrong[L.task]++;
+  if(k==='amt') document.getElementById('tot').textContent=sel.amtN?sel.amtN.toLocaleString():'0';
+}
+
+function next2(){
+  if(!sel.park||!sel.race){
+    L.clicks.push({t:stamp(),scr:'s2',label:'다음(미선택)',ok:false,task:L.task});
+    L.wrong[L.task]++;
+    alert('경마장과 경주번호를 선택해 주십시오.'); return;
+  }
+  L.clicks.push({t:stamp(),scr:'s2',label:'다음',ok:true,task:L.task});
+  const rn=sel.race.replace('R','');
+  document.getElementById('sb1').textContent=(sel.day||'토요일')+'>'+sel.park+'>'+sel.race;
+  document.getElementById('rt').textContent=sel.park+'>'+rn+'경주';
+  go('s3');
+}
+function reset3(){
+  tap('s3','초기화',0);
+  ['g-sik','g-no','g-amt'].forEach(g=>document.getElementById(g)
+    .querySelectorAll('.cell').forEach(x=>x.classList.remove('on')));
+  sel.sik=sel.no=sel.amt=null; sel.amtN=0;
+  document.getElementById('tot').textContent='0';
+}
+function buy(){
+  if(!sel.sik||!sel.no||!sel.amt){
+    L.clicks.push({t:stamp(),scr:'s3',label:'바로구매(미선택)',ok:false,task:L.task});
+    L.wrong[L.task]++;
+    alert('승식, 마번, 금액을 모두 선택해 주십시오.'); return;
+  }
+  L.clicks.push({t:stamp(),scr:'s3',label:'바로구매',ok:true,task:L.task});
+  const rn=sel.race.replace('R','');
+  document.getElementById('p1').textContent=sel.park+'-'+(sel.day||'토요일')+'-'+rn+'경주';
+  document.getElementById('p2').textContent=sel.sik+' '+sel.no+' '+sel.amtN;
+  document.getElementById('p3').textContent=sel.amtN.toLocaleString()+'원';
+  document.getElementById('pop').classList.add('on');
+}
+function closePop(){ document.getElementById('pop').classList.remove('on'); }
+function confirmBuy(){
+  closePop();
+  L.t1e=stamp();
+  const rn=sel.race.replace('R','');
+  const tmm=TIMES[parseInt(rn)-1]||'18시 20분';
+  const d=new Date(); const q=n=>String(n).padStart(2,'0');
+  const tstr=d.getFullYear()+'년'+q(d.getMonth()+1)+'월'+q(d.getDate())+'일 '+
+             q(d.getHours())+'시'+q(d.getMinutes())+'분'+q(d.getSeconds())+'초';
+  BUY={day:sel.day||'토요일',park:sel.park,race:sel.race,rn:rn,sik:sel.sik,
+       no:sel.no,amt:sel.amtN,time:tstr,tmm:tmm};
+  document.getElementById('r0').textContent=sel.park+' '+rn+'경주 '+tmm+' (장내구매)';
+  document.getElementById('r1a').textContent=sel.sik;
+  document.getElementById('r1b').textContent=sel.amtN;
+  document.getElementById('r1c').textContent=sel.no;
+  document.getElementById('r1d').textContent=sel.amtN.toLocaleString()+'원';
+  document.getElementById('r2a').textContent=sel.amtN+'*1 매';
+  document.getElementById('r2b').textContent=sel.amtN.toLocaleString()+'원';
+  document.getElementById('r3b').textContent=sel.amtN.toLocaleString()+'원';
+  document.getElementById('r4').textContent=tstr;
+  renderHist();
+  go('s5');
+}
+
+function renderHist(){
+  const list=document.getElementById('h-list');
+  if(!BUY){
+    document.getElementById('h-buy').innerHTML='0<i>원</i>';
+    document.getElementById('h-cnt').innerHTML='0<i>건</i>';
+    list.innerHTML='<div class="empty">조회된 구매내역이 없습니다.</div>';
+    return;
+  }
+  document.getElementById('h-buy').innerHTML=BUY.amt.toLocaleString()+'<i>원</i>';
+  document.getElementById('h-cnt').innerHTML='1<i>건</i>';
+  const dd=BUY.day.charAt(0);
+  list.innerHTML=
+   '<div class="rec">'+
+   '<div class="rh"><span class="rb">'+BUY.park+' '+BUY.rn+'R</span>'+
+   '<span class="rd">(12일-'+dd+') (M)</span></div>'+
+   '<table><tr><th>구매일시<br>(승식, 마번조합, 구매금액)</th><th>구매금액<br>(환급+환불)</th></tr>'+
+   '<tr><td class="l">'+BUY.time+' (현재경주)<br>'+
+   '<span class="sk">'+BUY.sik+'</span> &nbsp; '+BUY.no+
+   ' &nbsp; <span class="am">'+BUY.amt.toLocaleString()+'</span><br>'+
+   '<span style="color:#8A939D">'+BUY.amt+'*1</span></td>'+
+   '<td style="text-align:center"><span class="am">'+BUY.amt.toLocaleString()+'원</span><br>'+
+   '<span style="color:#5A646E">(0)</span></td></tr></table>'+
+   '<div class="ft">구매 (장내구매)</div></div>';
+}
+
+function mnHist(){
+  const ok=(L.task===2);
+  L.clicks.push({t:stamp(),scr:'s1',label:'구매내역조회',ok,task:L.task});
+  if(!ok) L.wrong[L.task]++;
+  if(L.task===2 && !L.t2done){ L.t2e=stamp(); L.t2done=true; }
+  go('s6');
+}
+
+function val(nm){
+  const el=document.querySelector('input[name="'+nm+'"]:checked');
+  return el?el.value:null;
+}
+function endT1(){ go('sv1'); }
+function goT2(){
+  const rows=[...document.querySelectorAll('#q-mat .mrowq')];
+  if(rows.some(r=>!r.dataset.v)){ alert('모든 단계에 표시해 주십시오.'); return; }
+  go('s-t2');
+}
+function startT2(){
+  L.task=2; L.t2s=stamp(); clearSel(); go('s1');
+}
+function endT2(){ go('sv2'); }
+function goLast(){
+  if(!val('t2d')||!val('t2f')){ alert('두 문항 모두 답해 주십시오.'); return; }
+  go('sv3');
+}
+
+function submit(){
+  const nmv=(document.getElementById('q-name').value||'').trim();
+  if(!nmv){ alert('성함을 적어 주십시오.'); return; }
+  if(!val('age')||!val('job')){ alert('연령대와 직업을 골라 주십시오.'); return; }
+  if(L.cur) L.screen[L.cur]=(L.screen[L.cur]||0)+(now()-L.curT)/1000;
+  const name=nmv;
+  const free=document.getElementById('q-free').value.trim()||'(없음)';
+  const rows=[...document.querySelectorAll('#q-mat .mrowq')];
+  let matTxt='', msum=0, mcnt=0;
+  rows.forEach(r=>{
+    const v=r.dataset.v;
+    matTxt+='    '+r.dataset.k.padEnd(22,' ')+' : '+(v?v+' / 5':'무응답')+'\n';
+    if(v){ msum+=parseInt(v); mcnt++; }
+  });
+  const mavg=mcnt?(msum/mcnt).toFixed(2):'—';
+  const okAll=sel.day===ANS.day&&sel.park===ANS.park&&sel.race===ANS.race&&
+              sel.sik===ANS.sik&&sel.no===ANS.no&&sel.amtN===ANS.amtN;
+  const buyOk=BUY&&BUY.day===ANS.day&&BUY.park===ANS.park&&BUY.race===ANS.race&&
+              BUY.sik===ANS.sik&&BUY.no===ANS.no&&BUY.amt===ANS.amtN;
+  const t1t=L.t1e!==null?(+L.t1e).toFixed(1):'—';
+  const t2t=(L.t2s!==null&&L.t2e!==null)?(L.t2e-L.t2s).toFixed(1):'—';
+  const nm=k=>({s1:'01 첫 화면',s2:'02 경주 선택',s3:'03 승식·마번·금액',
+                s5:'05 구매 완료',s6:'06 구매내역'}[k]||k);
+  let st='';
+  ['s1','s2','s3','s5','s6'].forEach(k=>{
+    if(L.screen[k]) st+='  '+nm(k)+' : '+L.screen[k].toFixed(1)+'초\n'; });
+  let cl='';
+  L.clicks.forEach(c=>{
+    const m=c.ok===null?'·':(c.ok?'O':'X');
+    cl+='  [T'+c.task+' '+c.t+'s] '+m+' '+c.scr+' · '+c.label+'\n';
+  });
+  RESULT=
+'전자 마권 사용성 평가 결과\n'+
+'════════════════════════════\n'+
+'참여자  '+name+'  ·  '+val('age')+'  ·  '+val('job')+'  ·  코드 '+PCODE+'\n\n'+
+'[ 과제 1 · 마권 구매 ]\n'+
+'  과제        : 9월 12일(토) 서울 3경주 · 단승 · 7번 · 5,000원\n'+
+'  성공 여부   : '+(buyOk?'성공':'실패(선택 불일치)')+'\n'+
+'  소요 시간   : '+t1t+'초\n'+
+'  홈 복귀     : '+L.home[1]+'회\n'+
+'  오클릭      : '+L.wrong[1]+'회\n'+
+'  실제 선택   : '+(BUY?(BUY.day+' / '+BUY.park+' / '+BUY.race+' / '+BUY.sik+
+                  ' / '+BUY.no+'번 / '+BUY.amt.toLocaleString()+'원'):'-')+'\n'+
+'\n  단계별 어려움 (5점 = 어려움)\n'+matTxt+
+'    평균                     : '+mavg+' / 5\n\n'+
+'[ 과제 2 · 구매내역 확인 ]\n'+
+'  성공 여부   : '+(L.t2done?'성공':'실패(도달 못함)')+'\n'+
+'  소요 시간   : '+t2t+'초\n'+
+'  홈 복귀     : '+L.home[2]+'회\n'+
+'  오클릭      : '+L.wrong[2]+'회\n'+
+'  체감 어려움 : '+(val('t2d')||'무응답')+' / 5\n'+
+'  탐색 경로   : '+(val('t2f')||'무응답')+'\n\n'+
+'[ 화면별 체류 시간 ]\n'+st+'\n'+
+
+'[ 불편했던 점 ]\n    '+free.replace(/\n/g,'\n    ')+'\n\n'+
+'[ 조작 기록 ]\n'+cl;
+  const gv=k=>{const r=[...document.querySelectorAll('#q-mat .mrowq')].find(x=>x.dataset.k===k);
+               return r&&r.dataset.v?parseInt(r.dataset.v):'';};
+  sendRow({
+    '참가자코드':PCODE, '이름':name, '연령대':val('age'), '직업':val('job'),
+    'T1_성공':(buyOk?'성공':'실패'), 'T1_소요초':t1t, 'T1_홈복귀':L.home[1], 'T1_오클릭':L.wrong[1],
+    'T1_요일':BUY?BUY.day:'', 'T1_경마장':BUY?BUY.park:'', 'T1_경주':BUY?BUY.race:'',
+    'T1_승식':BUY?BUY.sik:'', 'T1_마번':BUY?BUY.no:'', 'T1_금액':BUY?BUY.amt:'',
+    'S1_예매화면찾기':gv('마권 예매 화면 찾기'), 'S2_경주고르기':gv('날짜·경마장·경주 고르기'),
+    'S3_승식':gv('승식 고르기'), 'S4_마번':gv('마번 고르기'),
+    'S5_금액':gv('금액 고르기'), 'S6_구매확정':gv('구매 확정하기'), '단계평균':mavg,
+    'T2_성공':(L.t2done?'성공':'실패'), 'T2_소요초':t2t, 'T2_홈복귀':L.home[2],
+    'T2_오클릭':L.wrong[2], 'T2_어려움':val('t2d'), 'T2_탐색경로':val('t2f'),
+    '불편한점':free, '조작기록':L.clicks.map(c=>'T'+c.task+' '+c.t+'s '+
+      (c.ok===null?'·':(c.ok?'O':'X'))+' '+c.scr+' '+c.label).join(' | ')
+  });
+  document.getElementById('out').textContent=RESULT;
+  go('s-end');
+}
+function sendRow(d){
+  const box=document.getElementById('sendstat');
+  if(box) box.innerHTML='<span class="st wait">결과를 보내는 중입니다…</span>';
+  fetch(POST_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+                  body:JSON.stringify(d)})
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      SENT=!!(j&&j.ok);
+      if(box) box.innerHTML=SENT
+        ? '<span class="st ok">결과가 정상적으로 저장되었습니다. 창을 닫으셔도 됩니다.</span>'
+        : '<span class="st warn">저장이 확인되지 않았습니다.<br>'+
+          '아래 <b>결과 보내기</b>로 전달해 주십시오.</span>';
+    })
+    .catch(function(){
+      if(box) box.innerHTML='<span class="st warn">전송은 되었을 수 있으나 확인이 되지 않았습니다.<br>'+
+        '아래 <b>결과 보내기</b>도 함께 눌러 진행자에게 전달해 주십시오.</span>';
+    });
+}
+function shareOut(){
+  const m=document.getElementById('copymsg');
+  if(navigator.share){
+    navigator.share({title:'전자 마권 사용성 평가 결과',text:RESULT})
+      .then(()=>{m.textContent='전송 창이 열렸습니다.';})
+      .catch(()=>{m.textContent='전송이 취소되었습니다. 결과 복사를 이용해 주십시오.';});
+  } else { m.textContent='이 브라우저는 공유를 지원하지 않습니다.'; copyOut(); }
+}
+function copyOut(){
+  const m=document.getElementById('copymsg');
+  const fb=()=>{
+    const ta=document.createElement('textarea');
+    ta.value=RESULT; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); m.textContent='복사되었습니다. 카카오톡으로 붙여넣어 보내주십시오.'; }
+    catch(e){ m.textContent='복사에 실패했습니다. 위 내용을 길게 눌러 직접 복사해 주십시오.'; }
+    document.body.removeChild(ta);
+  };
+  if(navigator.clipboard&&window.isSecureContext)
+    navigator.clipboard.writeText(RESULT).then(
+      ()=>{m.textContent='복사되었습니다. 카카오톡으로 붙여넣어 보내주십시오.';},fb);
+  else fb();
+}
+function dlOut(){
+  const b=new Blob([RESULT],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(b);
+  a.download='UT_결과_'+Date.now()+'.txt';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  document.getElementById('copymsg').textContent='파일로 저장되었습니다.';
+}
+</script>
+</body>
+</html>
