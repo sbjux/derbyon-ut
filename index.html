@@ -767,7 +767,7 @@ const L={t0:0,screen:{},cur:null,curT:0,clicks:[],
          t1s:null,t1e:null,t2s:null,t2e:null,task:1,t2done:false};
 const sel={day:null,park:null,race:null,sik:null,no:null,amt:null,amtN:0};
 let BUY=null, RESULT='', SENT=false;
-const POST_URL='https://script.google.com/macros/s/AKfycbywgiRQErEkC3mWyjTqUS9ccnfyHxHLMcmrjZ1kMJ8_YMfMfhmmkxxzRt5Y49GTtg8NhA/exec';
+const POST_URL='https://script.google.com/macros/s/AKfycby-ryjJjSnyFyd666KDKOkTcmjW_cvnfdLgZND7sDs94ibas5jJ6IxSvsoyxEes4PQK1w/exec';
 const PCODE=(function(){
   const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let r=''; for(let i=0;i<4;i++) r+=c.charAt(Math.floor(Math.random()*c.length));
@@ -1079,20 +1079,41 @@ function submit(){
 function sendRow(d){
   const box=document.getElementById('sendstat');
   if(box) box.innerHTML='<span class="st wait">결과를 보내는 중입니다…</span>';
-  fetch(POST_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
-                  body:JSON.stringify(d)})
-    .then(function(r){ return r.json(); })
-    .then(function(j){
-      SENT=!!(j&&j.ok);
-      if(box) box.innerHTML=SENT
-        ? '<span class="st ok">결과가 정상적으로 저장되었습니다. 창을 닫으셔도 됩니다.</span>'
-        : '<span class="st warn">저장이 확인되지 않았습니다.<br>'+
-          '아래 <b>결과 보내기</b>로 전달해 주십시오.</span>';
-    })
-    .catch(function(){
-      if(box) box.innerHTML='<span class="st warn">전송은 되었을 수 있으나 확인이 되지 않았습니다.<br>'+
-        '아래 <b>결과 보내기</b>도 함께 눌러 진행자에게 전달해 주십시오.</span>';
-    });
+  const body=JSON.stringify(d);
+  let done=false;
+  const ok=function(){
+    if(done) return; done=true; SENT=true;
+    if(box) box.innerHTML='<span class="st ok">결과가 정상적으로 저장되었습니다.<br>'+
+      '창을 닫으셔도 됩니다.</span>';
+  };
+  const warn=function(){
+    if(done) return; done=true;
+    if(box) box.innerHTML='<span class="st warn">저장이 확인되지 않았습니다.<br>'+
+      '아래 <b>결과 보내기</b>로 전달해 주십시오.</span>';
+  };
+
+  // ① 숨은 폼으로 전송 (교차 출처 제약을 받지 않음)
+  try{
+    const ifr=document.createElement('iframe');
+    ifr.name='sendfrm_'+Date.now(); ifr.style.display='none';
+    document.body.appendChild(ifr);
+    const f=document.createElement('form');
+    f.method='POST'; f.action=POST_URL; f.target=ifr.name; f.style.display='none';
+    const inp=document.createElement('input');
+    inp.type='hidden'; inp.name='payload'; inp.value=body;
+    f.appendChild(inp); document.body.appendChild(f);
+    ifr.onload=ok;
+    f.submit();
+  }catch(e){}
+
+  // ② 보조 경로 — 이미지 요청으로 한 번 더 전송
+  try{
+    const img=new Image();
+    img.onload=ok; img.onerror=function(){};
+    img.src=POST_URL+'?payload='+encodeURIComponent(body);
+  }catch(e){}
+
+  setTimeout(function(){ if(!done) warn(); }, 9000);
 }
 function shareOut(){
   const m=document.getElementById('copymsg');
