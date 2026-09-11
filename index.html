@@ -216,10 +216,11 @@
   .doc .lead{font-size:13.5px;color:#46525E;margin-bottom:20px;line-height:1.7;}
   .doc h2{font-size:14px;color:#16375C;margin:19px 0 5px;}
   .doc p{margin:0;font-size:13.5px;line-height:1.68;}
-  .term{border-left:3px solid #C9D8E8;padding:2px 0 2px 14px;margin-bottom:18px;}
+  .term{border-left:3px solid #C9D8E8;padding:2px 0 2px 14px;margin-bottom:20px;}
+  .term:first-of-type{padding-top:4px;}
   .term .tg{display:inline-block;background:#16375C;color:#fff;font-size:11px;
             font-weight:700;padding:3px 11px;border-radius:11px;margin-bottom:7px;}
-  .taskbox{background:#E8F3F0;border-left:4px solid var(--buy);padding:15px 16px;
+  .taskbox{background:#E8F3F0;border-left:4px solid var(--buy);padding:16px 16px;
            border-radius:3px;margin:24px 0 4px;}
   .taskbox .lb{font-size:11px;font-weight:700;color:var(--buy);margin-bottom:6px;}
   .taskbox .tx{font-size:15px;font-weight:700;color:#16375C;line-height:1.55;}
@@ -284,10 +285,23 @@
             letter-spacing:-.3px;}
   #s1,#s2,#s3,#s5,#s6{padding-top:70px;}
   .guide{background:#FFF8DB;border:1px solid #E2CE86;border-left:4px solid #C79A1E;
-         border-radius:6px;padding:14px 15px;margin-top:18px;}
+         border-radius:6px;padding:15px 15px 16px;margin-top:26px;margin-bottom:26px;}
   .guide p{margin:0;font-size:14px;line-height:1.6;color:#4A3E10;font-weight:600;
            display:flex;align-items:flex-start;gap:9px;}
   .guide p+p{margin-top:11px;padding-top:11px;border-top:1px solid rgba(190,160,60,.28);}
+  .pbox{border:1px solid var(--line2);border-radius:8px;padding:16px 15px 18px;
+        margin-top:20px;margin-bottom:34px;}
+  .pbox .tt{font-size:14px;font-weight:800;color:#16375C;margin-bottom:12px;}
+  .prow{display:flex;align-items:flex-start;gap:10px;margin-top:11px;}
+  .prow .pl{flex:0 0 46px;font-size:13px;font-weight:700;color:#46525E;padding-top:9px;}
+  .tin2{flex:1;border:1px solid var(--line2);border-radius:6px;padding:10px 11px;
+        font-size:14.5px;font-family:inherit;outline:none;min-width:0;}
+  .tin2:focus{border-color:var(--pick);}
+  .chips{flex:1;display:flex;flex-wrap:wrap;gap:6px;}
+  .chips div{border:1px solid var(--line2);border-radius:16px;padding:8px 13px;
+             font-size:13.5px;font-weight:600;color:#46525E;background:#fff;cursor:pointer;}
+  .chips div.on{background:var(--pick);border-color:var(--pick);color:#fff;font-weight:700;}
+  .bigbtn:disabled{background:#C4CBD4;cursor:default;}
   .guide .gn{flex:0 0 19px;height:19px;margin-top:2px;border-radius:50%;
              background:#C79A1E;color:#fff;font-size:11px;font-weight:800;
              display:flex;align-items:center;justify-content:center;}
@@ -349,7 +363,9 @@
               border-radius:6px;padding:12px 13px;font-size:14.5px;cursor:pointer;
               background:#fff;}
   .opts input{width:17px;height:17px;accent-color:var(--pick);flex:0 0 auto;}
-  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:9px;}
+  #sv2 .mhead{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;
+              margin:10px 0 0;padding:0;}
+  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:5px;}
   .scale label{cursor:pointer;}
   .scale input{display:none;}
   .scale span{display:block;border:1px solid var(--line2);border-radius:6px;
@@ -380,6 +396,35 @@
       실제 금액은 오가지 않고 앱을 다루는 과정만 기록합니다.<br>
       <b>여러분의 능력이 아니라 앱의 사용성을 평가합니다.</b>
     </div>
+    <div class="pbox">
+      <div class="tt">시작하기 전에 알려주십시오</div>
+
+      <div class="prow"><span class="pl">성함</span>
+        <input id="p-name" class="tin2" type="text" placeholder="이름" oninput="chkStart()"></div>
+
+      <div class="prow"><span class="pl">연령대</span>
+        <div class="chips" id="p-age">
+          <div onclick="pk('age',this)">20대</div><div onclick="pk('age',this)">30대</div>
+          <div onclick="pk('age',this)">40대</div><div onclick="pk('age',this)">50대 이상</div>
+        </div></div>
+
+      <div class="prow"><span class="pl">성별</span>
+        <div class="chips" id="p-sex">
+          <div onclick="pk('sex',this)">남</div><div onclick="pk('sex',this)">여</div>
+        </div></div>
+
+      <div class="prow"><span class="pl">직업</span>
+        <div class="chips" id="p-job">
+          <div onclick="pk('job',this)">학생</div><div onclick="pk('job',this)">디자인 · IT</div>
+          <div onclick="pk('job',this)">사무 · 관리직</div><div onclick="pk('job',this)">전문직</div>
+          <div onclick="pk('job',this)">서비스 · 판매직</div><div onclick="pk('job',this)">자영업</div>
+          <div onclick="pk('job',this)">기타</div>
+        </div></div>
+
+      <div class="priv" style="margin-top:12px">응답을 구별하기 위한 용도로만 사용하며,
+        그 외의 목적으로는 일절 사용하지 않습니다.</div>
+    </div>
+
     <div class="term">
       <div class="tg">경마</div>
       <p>여러 마리의 말이 함께 달려 순위를 겨루는 경기입니다.<br>
@@ -396,14 +441,6 @@
       이번 과제에서 사용할 <b>단승식</b>은 <b>1등으로 들어올 말 한 마리를 맞히는 방식</b>입니다.</p>
     </div>
 
-    <div class="taskbox">
-      <div class="lb">과제 1</div>
-      <div class="tx">9월 12일(토) 서울 3경주에서 7번 말이 1등 할 것으로 예상하는 마권을 5,000원어치 구매해 주십시오.</div>
-    </div>
-    <div class="taskbox" style="margin-top:10px">
-      <div class="lb">과제 2</div>
-      <div class="tx">구매하신 마권이 제대로 구매되었는지 앱에서 확인해 주십시오.</div>
-    </div>
     <div class="guide">
       <div class="tt">진행하시기 전에</div>
       <p><span class="gn">1</span><span>과제 내용은 <b>화면 맨 위에 계속 표시</b>되므로 외우지 않으셔도 됩니다.</span></p>
@@ -413,8 +450,18 @@
       <p><span class="gn">5</span><span>중간에 <b>다른 앱으로 나가거나 화면을 새로 고치면 처음부터 다시 하셔야 합니다.</b> 끝까지 이어서 진행해 주십시오.</span></p>
       <p><span class="gn">6</span><span>총 소요 시간은 <b>약 10분</b> 정도 걸립니다.</span></p>
     </div>
+    <div class="taskbox">
+      <div class="lb">과제 1</div>
+      <div class="tx">9월 12일(토) 서울 3경주에서 7번 말이 1등 할 것으로 예상하는 마권을 5,000원어치 구매해 주십시오.</div>
+    </div>
+    <div class="taskbox" style="margin-top:12px">
+      <div class="lb">과제 2</div>
+      <div class="tx">구매하신 마권이 제대로 구매되었는지 앱에서 확인해 주십시오.</div>
+    </div>
   </div>
-  <div class="btm" style="padding-top:12px"><button class="bigbtn" onclick="start()">시작하기</button></div>
+  <div class="btm" style="padding-top:12px">
+    <button class="bigbtn" id="startbtn" onclick="start()" disabled>시작하기</button>
+  </div>
 </section>
 
 <!-- ===== 01 홈 ===== -->
@@ -666,6 +713,7 @@
 
     <div class="qbox">
       <div class="q">1. 구매내역을 확인하는 과정이 얼마나 어려우셨습니까?</div>
+      <div class="mhead"><i>쉬움</i><i></i><i>보통</i><i></i><i>어려움</i></div>
       <div class="scale">
         <label><input type="radio" name="t2d" value="1"><span>1</span></label>
         <label><input type="radio" name="t2d" value="2"><span>2</span></label>
@@ -673,7 +721,6 @@
         <label><input type="radio" name="t2d" value="4"><span>4</span></label>
         <label><input type="radio" name="t2d" value="5"><span>5</span></label>
       </div>
-      <div class="sends"><span>쉬움</span><span>어려움</span></div>
     </div>
 
     <div class="qbox">
@@ -693,38 +740,8 @@
   <div class="doc">
     <h1>마지막입니다</h1>
     <div class="lead">전체 과정에 대해 여쭙겠습니다.</div>
-
     <div class="qbox">
-      <div class="q">1. 성함을 적어 주십시오.</div>
-      <input id="q-name" class="tin" type="text" placeholder="이름">
-      <div class="priv">응답을 구별하기 위한 용도로만 사용하며, 그 외의 목적으로는 일절 사용하지 않습니다.</div>
-    </div>
-
-    <div class="qbox">
-      <div class="q">2. 연령대를 골라 주십시오.</div>
-      <div class="opts">
-        <label><input type="radio" name="age" value="20대">20대</label>
-        <label><input type="radio" name="age" value="30대">30대</label>
-        <label><input type="radio" name="age" value="40대">40대</label>
-        <label><input type="radio" name="age" value="50대 이상">50대 이상</label>
-      </div>
-    </div>
-
-    <div class="qbox">
-      <div class="q">3. 현재 무엇을 하고 계십니까?</div>
-      <div class="opts">
-        <label><input type="radio" name="job" value="학생">학생</label>
-        <label><input type="radio" name="job" value="디자인·IT">디자인 · IT 직군</label>
-        <label><input type="radio" name="job" value="사무·관리직">사무 · 관리직</label>
-        <label><input type="radio" name="job" value="전문직">전문직</label>
-        <label><input type="radio" name="job" value="서비스·판매직">서비스 · 판매직</label>
-        <label><input type="radio" name="job" value="자영업">자영업</label>
-        <label><input type="radio" name="job" value="기타">기타</label>
-      </div>
-    </div>
-
-    <div class="qbox">
-      <div class="q">4. 불편했던 점을 자유롭게 적어 주십시오.</div>
+      <div class="q">불편했던 점을 자유롭게 적어 주십시오.</div>
       <textarea id="q-free" placeholder="화면을 쓰면서 불편했던 점을 적어 주십시오."></textarea>
     </div>
   </div>
@@ -767,6 +784,7 @@ const L={t0:0,screen:{},cur:null,curT:0,clicks:[],
          t1s:null,t1e:null,t2s:null,t2e:null,task:1,t2done:false};
 const sel={day:null,park:null,race:null,sik:null,no:null,amt:null,amtN:0};
 let BUY=null, RESULT='', SENT=false;
+const P={name:'',age:'',sex:'',job:''};
 const POST_URL='https://script.google.com/macros/s/AKfycby-ryjJjSnyFyd666KDKOkTcmjW_cvnfdLgZND7sDs94ibas5jJ6IxSvsoyxEes4PQK1w/exec';
 const PCODE=(function(){
   const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -822,7 +840,22 @@ function clearSel(){
   sel.day=sel.park=sel.race=sel.sik=sel.no=sel.amt=null; sel.amtN=0;
   const t=document.getElementById('tot'); if(t) t.textContent='0';
 }
-function start(){ L.t0=now(); L.t1s=0; build(); go('s1'); }
+function pk(k,el){
+  const box=el.parentNode;
+  box.querySelectorAll('div').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on'); P[k]=el.textContent.trim();
+  chkStart();
+}
+function chkStart(){
+  P.name=(document.getElementById('p-name').value||'').trim();
+  document.getElementById('startbtn').disabled =
+    !(P.name && P.age && P.sex && P.job);
+}
+function start(){
+  chkStart();
+  if(!(P.name&&P.age&&P.sex&&P.job)){ alert('모든 항목을 입력해 주십시오.'); return; }
+  L.t0=now(); L.t1s=0; build(); go('s1');
+}
 
 function build(){
   const R=document.getElementById('g-race'); R.innerHTML='';
@@ -1003,11 +1036,8 @@ function goLast(){
 }
 
 function submit(){
-  const nmv=(document.getElementById('q-name').value||'').trim();
-  if(!nmv){ alert('성함을 적어 주십시오.'); return; }
-  if(!val('age')||!val('job')){ alert('연령대와 직업을 골라 주십시오.'); return; }
   if(L.cur) L.screen[L.cur]=(L.screen[L.cur]||0)+(now()-L.curT)/1000;
-  const name=nmv;
+  const name=P.name;
   const free=document.getElementById('q-free').value.trim()||'(없음)';
   const rows=[...document.querySelectorAll('#q-mat .mrowq')];
   let matTxt='', msum=0, mcnt=0;
@@ -1036,7 +1066,7 @@ function submit(){
   RESULT=
 '전자 마권 사용성 평가 결과\n'+
 '════════════════════════════\n'+
-'참여자  '+name+'  ·  '+val('age')+'  ·  '+val('job')+'  ·  코드 '+PCODE+'\n\n'+
+'참여자  '+name+'  ·  '+P.age+'  ·  '+P.sex+'  ·  '+P.job+'  ·  코드 '+PCODE+'\n\n'+
 '[ 과제 1 · 마권 구매 ]\n'+
 '  과제        : 9월 12일(토) 서울 3경주 · 단승 · 7번 · 5,000원\n'+
 '  성공 여부   : '+(buyOk?'성공':'실패(선택 불일치)')+'\n'+
@@ -1061,7 +1091,7 @@ function submit(){
   const gv=k=>{const r=[...document.querySelectorAll('#q-mat .mrowq')].find(x=>x.dataset.k===k);
                return r&&r.dataset.v?parseInt(r.dataset.v):'';};
   sendRow({
-    '참가자코드':PCODE, '이름':name, '연령대':val('age'), '직업':val('job'),
+    '참가자코드':PCODE, '이름':name, '연령대':P.age, '성별':P.sex, '직업':P.job,
     'T1_성공':(buyOk?'성공':'실패'), 'T1_소요초':t1t, 'T1_홈복귀':L.home[1], 'T1_오클릭':L.wrong[1],
     'T1_요일':BUY?BUY.day:'', 'T1_경마장':BUY?BUY.park:'', 'T1_경주':BUY?BUY.race:'',
     'T1_승식':BUY?BUY.sik:'', 'T1_마번':BUY?BUY.no:'', 'T1_금액':BUY?BUY.amt:'',
